@@ -12,6 +12,7 @@
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
+    --font-weight-bold: 700;
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --animate-spin: spin 1s linear infinite;
     --default-transition-duration: 150ms;
@@ -655,6 +656,141 @@
       & > * {
         @media (prefers-reduced-motion: no-preference) {
           animation: toast 0.25s ease-out;
+        }
+      }
+    }
+  }
+  .toggle {
+    @layer daisyui.l1.l2.l3 {
+      border: var(--border) solid currentColor;
+      color: var(--input-color);
+      position: relative;
+      display: inline-grid;
+      flex-shrink: 0;
+      cursor: pointer;
+      appearance: none;
+      place-content: center;
+      vertical-align: middle;
+      webkit-user-select: none;
+      user-select: none;
+      grid-template-columns: 0fr 1fr 1fr;
+      --radius-selector-max: calc(
+      var(--radius-selector) + var(--radius-selector) + var(--radius-selector)
+    );
+      border-radius: calc( var(--radius-selector) + min(var(--toggle-p), var(--radius-selector-max)) + min(var(--border), var(--radius-selector-max)) );
+      padding: var(--toggle-p);
+      box-shadow: 0 1px currentColor inset;
+      @supports (color: color-mix(in lab, red, red)) {
+        box-shadow: 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), #0000) inset;
+      }
+      transition: color 0.3s, grid-template-columns 0.2s;
+      --input-color: var(--color-base-content);
+      @supports (color: color-mix(in lab, red, red)) {
+        --input-color: color-mix(in oklab, var(--color-base-content) 50%, #0000);
+      }
+      --toggle-p: calc(var(--size) * 0.125);
+      --size: calc(var(--size-selector, 0.25rem) * 6);
+      width: calc((var(--size) * 2) - (var(--border) + var(--toggle-p)) * 2);
+      height: var(--size);
+      > * {
+        z-index: 1;
+        grid-column: span 1 / span 1;
+        grid-column-start: 2;
+        grid-row-start: 1;
+        height: 100%;
+        cursor: pointer;
+        appearance: none;
+        background-color: transparent;
+        padding: calc(0.25rem * 0.5);
+        transition: opacity 0.2s, rotate 0.4s;
+        border: none;
+        &:focus {
+          --tw-outline-style: none;
+          outline-style: none;
+          @media (forced-colors: active) {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+          }
+        }
+        &:nth-child(2) {
+          color: var(--color-base-100);
+          rotate: 0deg;
+        }
+        &:nth-child(3) {
+          color: var(--color-base-100);
+          opacity: 0%;
+          rotate: -15deg;
+        }
+      }
+      &:has(:checked) {
+        > :nth-child(2) {
+          opacity: 0%;
+          rotate: 15deg;
+        }
+        > :nth-child(3) {
+          opacity: 100%;
+          rotate: 0deg;
+        }
+      }
+      &:before {
+        position: relative;
+        inset-inline-start: calc(0.25rem * 0);
+        grid-column-start: 2;
+        grid-row-start: 1;
+        aspect-ratio: 1 / 1;
+        height: 100%;
+        border-radius: var(--radius-selector);
+        background-color: currentcolor;
+        translate: 0;
+        --tw-content: "";
+        content: var(--tw-content);
+        transition: background-color 0.1s, translate 0.2s, inset-inline-start 0.2s;
+        box-shadow: 0 -1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px currentColor;
+        @supports (color: color-mix(in lab, red, red)) {
+          box-shadow: 0 -1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px color-mix(in oklab, currentColor calc(var(--depth) * 10%), #0000);
+        }
+        background-size: auto, calc(var(--noise) * 100%);
+        background-image: none, var(--fx-noise);
+      }
+      @media (forced-colors: active) {
+        &:before {
+          outline-style: var(--tw-outline-style);
+          outline-width: 1px;
+          outline-offset: calc(1px * -1);
+        }
+      }
+      @media print {
+        &:before {
+          outline: 0.25rem solid;
+          outline-offset: -1rem;
+        }
+      }
+      &:focus-visible, &:has(:focus-visible) {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+      }
+      &:checked, &[aria-checked="true"], &:has(> input:checked) {
+        grid-template-columns: 1fr 1fr 0fr;
+        background-color: var(--color-base-100);
+        --input-color: var(--color-base-content);
+        &:before {
+          background-color: currentcolor;
+        }
+        @starting-style {
+          &:before {
+            opacity: 0;
+          }
+        }
+      }
+      &:indeterminate {
+        grid-template-columns: 0.5fr 1fr 0.5fr;
+      }
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 30%;
+        &:before {
+          background-color: transparent;
+          border: var(--border) solid currentColor;
         }
       }
     }
@@ -1360,8 +1496,14 @@
       font-weight: 600;
     }
   }
+  .block {
+    display: block;
+  }
   .flex {
     display: flex;
+  }
+  .hidden {
+    display: none;
   }
   .table {
     display: table;
@@ -1387,8 +1529,23 @@
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
+  .w-300 {
+    width: calc(var(--spacing) * 300);
+  }
+  .w-\[00px\] {
+    width: 00px;
+  }
+  .w-\[100px\] {
+    width: 100px;
+  }
+  .w-\[300px\] {
+    width: 300px;
+  }
   .max-w-250 {
     max-width: calc(var(--spacing) * 250);
+  }
+  .max-w-\[800px\] {
+    max-width: 800px;
   }
   .flex-shrink {
     flex-shrink: 1;
@@ -1424,6 +1581,9 @@
   .resize {
     resize: both;
   }
+  .flex-col {
+    flex-direction: column;
+  }
   .flex-wrap {
     flex-wrap: wrap;
   }
@@ -1441,6 +1601,9 @@
   }
   .gap-30 {
     gap: calc(var(--spacing) * 30);
+  }
+  .gap-\[5px\] {
+    gap: 5px;
   }
   .gap-\[15px\] {
     gap: 15px;
@@ -1476,11 +1639,21 @@
   .pb-20 {
     padding-bottom: calc(var(--spacing) * 20);
   }
-  .pb-80 {
-    padding-bottom: calc(var(--spacing) * 80);
+  .text-\[20px\] {
+    font-size: 20px;
+  }
+  .text-\[50px\] {
+    font-size: 50px;
+  }
+  .font-bold {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
   }
   .text-wrap {
     text-wrap: wrap;
+  }
+  .text-black {
+    color: var(--color-black);
   }
   .text-white {
     color: var(--color-white);
@@ -1792,6 +1965,10 @@
   inherits: false;
   initial-value: solid;
 }
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
 @property --tw-shadow {
   syntax: "*";
   inherits: false;
@@ -1933,6 +2110,7 @@
       --tw-skew-x: initial;
       --tw-skew-y: initial;
       --tw-border-style: solid;
+      --tw-font-weight: initial;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
       --tw-shadow-alpha: 100%;

@@ -1,32 +1,46 @@
+
+let limit = 4;
+let skip = 0;
+
 const elContainer = document.getElementById('container');
 const elPrev = document.getElementById('prev');
 const elNext = document.getElementById('next');
+
+if (skip === 0) {
+  elPrev.style.display = 'none';
+} else if (skip !== 0) elPrev.style.display = 'flex';
 loader(true);
+request();
 
-
-fetch('https://json-api.uz/api/project/fn44-amaliyot/cars')
-  .then((res) => {
-    return res.json();
-  })
-  .then((res) => {
-    ui(res.data);
-  })
-  .finally(() => {
-    loader(false);
-  });
+function request() {
+  fetch(`https://json-api.uz/api/project/fn44-amaliyot/cars?skip=${skip}&limit=${limit}`)
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      ui(res.data);
+    })
+    .finally(() => {
+      loader(false);
+    });
+}
 
 function loader(bool) {
   const elLoader = document.getElementById('loader');
   const elLoaderTemplate = document.getElementById('templateLoader');
   elLoader.innerHTML = null;
   if (bool) {
-    Array.from({ length: 3 }, (el, index) => index).forEach(() => {
+    Array.from({ length: 4 }, (el, index) => index).forEach(() => {
       elLoader.appendChild(elLoaderTemplate.cloneNode(true).content);
     });
   }
 }
 
 function ui(data) {
+  if (skip === 0) {
+    elPrev.style.display = 'none';
+  } else if (skip !== 0) elPrev.style.display = 'flex';
+  paginationDisabled(false);
   const elTemp = document.getElementById('templateCard');
   data.forEach((el) => {
     const clone = elTemp.cloneNode(true).content;
@@ -54,7 +68,7 @@ elContainer.addEventListener('click', (evt) => {
     deleteCar(evt.target.id);
   }
   if (evt.target.classList.contains('js-info-button')) {
-    console.log(evt.target.id + ' info');
+    infoCar(evt.target.id)
   }
 });
 
@@ -74,5 +88,32 @@ function deleteCar(id) {
     .finally(() => {});
 }
 
-elPrev.addEventListener('click', {});
-elPrev.addEventListener('click', {});
+elPrev.addEventListener('click', () => {
+  skip = skip - limit;
+  elContainer.innerHTML = null;
+  loader(true);
+  paginationDisabled(true);
+  request();
+});
+
+elNext.addEventListener('click', () => {
+  skip = skip + limit;
+  elContainer.innerHTML = null;
+  loader(true);
+  paginationDisabled(true);
+  request();
+});
+
+function paginationDisabled(bool) {
+  if (bool == true) {
+    elNext.style.pointerEvents = 'none';
+  } else {
+    elNext.style.pointerEvents = 'all';
+  }
+}
+
+// Info
+
+function infoCar(id) {
+  window.open(`/details.html?id=${id}`, '_blank');
+}
