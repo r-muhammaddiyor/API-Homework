@@ -94,7 +94,11 @@ function deleteCar(id) {
     })
     .then((res) => {
       document.getElementById(id).closest('.card').remove();
-      alert(res);
+      const clone = elSuccessTemplate.cloneNode(true).content;
+      elTost.appendChild(clone);
+      setTimeout(() => {
+        document.querySelector('[role="alert"]').remove();
+      }, 2000);
     })
     .finally(() => {});
 }
