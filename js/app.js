@@ -1,10 +1,21 @@
-
 let limit = 4;
 let skip = 0;
 
 const elContainer = document.getElementById('container');
 const elPrev = document.getElementById('prev');
 const elNext = document.getElementById('next');
+const elCarName = document.querySelector('.js-car-name');
+const elCarYear = document.querySelector('.js-car-year');
+const elCarColor = document.querySelector('.js-car-color');
+const elCarSpeed = document.querySelector('.js-car-speed');
+const elCarPower = document.querySelector('.js-car-power');
+const elCarAcceleration = document.querySelector('.js-car-acceleration');
+const elCarCategory = document.querySelector('.js-car-category');
+const elSubmitButton = document.querySelector('#submitButton');
+const elTostTemplate = document.querySelector('#tostTemplate');
+const elTost = document.querySelector('#tost');
+const elCarForm = document.querySelector('#carAddForm');
+const elSuccessTemplate = document.querySelector('#tostTemplateSuccess');
 
 if (skip === 0) {
   elPrev.style.display = 'none';
@@ -68,7 +79,7 @@ elContainer.addEventListener('click', (evt) => {
     deleteCar(evt.target.id);
   }
   if (evt.target.classList.contains('js-info-button')) {
-    infoCar(evt.target.id)
+    infoCar(evt.target.id);
   }
 });
 
@@ -117,3 +128,38 @@ function paginationDisabled(bool) {
 function infoCar(id) {
   window.open(`/details.html?id=${id}`, '_blank');
 }
+
+elCarForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  const formData = new FormData(elCarForm);
+  const result = {};
+  const arr = [];
+
+  formData.forEach((value, key) => {
+    result[key] = value;
+
+    if (value.trim() === '') {
+      arr.push(key);
+    }
+  });
+
+  if (arr.length > 0) {
+    const clone = elTostTemplate.cloneNode(true).content;
+    clone.querySelector('span').innerText = `${arr[0]} kiriting!`;
+    elTost.appendChild(clone);
+
+    const focusInput = elCarForm.querySelector(`[name="${arr[0]}"]`);
+    focusInput.focus();
+
+    setTimeout(() => {
+      document.querySelector('[role="alert"]').remove();
+    }, 1500);
+  } else {
+    const clone = elSuccessTemplate.cloneNode(true).content;
+    elTost.appendChild(clone);
+    setTimeout(() => {
+      document.querySelector('[role="alert"]').remove();
+    }, 2000);
+  }
+});

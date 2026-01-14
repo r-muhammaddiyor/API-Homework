@@ -20,24 +20,27 @@ fetch('https://json-api.uz/api/project/fn44-amaliyot/cars')
   });
 
 function ui(data) {
-
+  const url = new URL(window.location.href).searchParams;
+  let id = url.get("id")
   data.forEach((element) => {
-    elTitle.innerText = element.name;
-    elTrim.innerText = element.trim;
-    elGeneration.innerText = element.generation;
-    elYear.innerText = element.year;
-    elColor.innerText = element.color;
-    elColorName.innerText = element.colorName;
-    elCategory.innerText = element.category;
-    elMaxSpeed.innerText = element.maxSpeed;
+    if (element.id == id) {
+      elTitle.innerText = element.name;
+      elTrim.innerText = element.trim;
+      elGeneration.innerText = element.generation;
+      elYear.innerText = element.year;
+      elColor.innerText = element.color;
+      elColorName.innerText = element.colorName;
+      elCategory.innerText = element.category;
+      elMaxSpeed.innerText = element.maxSpeed;
+    }
   });
 }
 
 function loader(bool) {
   const elLoader = document.getElementById('loader');
   if (bool) {
-    elLoader.classList.toggle("block")
+    elLoader.classList.toggle('block');
   } else {
-    elLoader.classList.toggle("hidden")
+    elLoader.classList.toggle('hidden');
   }
 }
