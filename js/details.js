@@ -21,17 +21,17 @@ fetch('https://json-api.uz/api/project/fn44-amaliyot/cars')
 
 function ui(data) {
   const url = new URL(window.location.href).searchParams;
-  let id = url.get("id")
+  let id = url.get('id');
   data.forEach((element) => {
     if (element.id == id) {
-      elTitle.innerText = element.name;
-      elTrim.innerText = element.trim;
-      elGeneration.innerText = element.generation;
-      elYear.innerText = element.year;
-      elColor.innerText = element.color;
-      elColorName.innerText = element.colorName;
-      elCategory.innerText = element.category;
-      elMaxSpeed.innerText = element.maxSpeed;
+      elTitle.innerText = element.name ? element.name : 'No title';
+      elTrim.innerText = element.trim ? element.trim : 'No data';
+      elGeneration.innerText = element.generation ? element.generation : 'No data ';
+      elYear.innerText = element.year ? element.year : 'No year';
+      elColor.innerText = element.color ? element.name : 'No title';
+      elColorName.innerText = element.colorName ? element.colorName : 'No color - name';
+      elCategory.innerText = element.category ? element.category : 'No data';
+      elMaxSpeed.innerText = element.maxSpeed ? element.maxSpeed : 'No data';
     }
   });
 }
