@@ -36,6 +36,8 @@ function ui(data) {
   });
 }
 
+
+
 function loader(bool) {
   const elLoader = document.getElementById('loader');
   if (bool) {
