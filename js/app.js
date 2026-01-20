@@ -216,7 +216,7 @@ elCarEditForm.addEventListener('submit', (el) => {
       loader(true);
       request();
     });
-});
+}); 
 
 // GET
 
